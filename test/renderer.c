@@ -2,12 +2,15 @@
 
 
 #include "renderer.h"
+
 #include <raylib.h>
 #include <rlgl.h>
 
 #include <Open4D/OFD_geometry.h>
 
 #include <math.h>
+
+#include <stdio.h>
 
 
 
@@ -17,7 +20,7 @@ static double rotation = 0;
 
 static const double DEGREES_TO_RADIANS = (M_PI / 180);
 
-void drawTriangle3D(OFD_Triangle3D tri) {
+void draw_triangle_3d(OFD_Triangle3D tri) {
     DrawTriangle3D(
         (Vector3){tri.a.x, tri.a.y, tri.a.z},
         (Vector3){tri.b.x, tri.b.y, tri.b.z},
@@ -27,16 +30,16 @@ void drawTriangle3D(OFD_Triangle3D tri) {
 }
 
 
-
-
-void drawPoint3D(OFD_Vector3 p) {
-
+void draw_mesh_3d(OFD_Mesh3D tri) {
+    for (int i = 0; i < tri.length; i++) {
+        draw_triangle_3d(tri.mesh[i]);
+    }
 }
 
 
 
 
-void renderFrame(OFD_Mesh env[]) {
+void start_frame() {
 
 
     if (IsKeyDown(KEY_LEFT)) {
@@ -50,31 +53,24 @@ void renderFrame(OFD_Mesh env[]) {
         camera.position.y = cameraPosition.x * sin(4 * DEGREES_TO_RADIANS) + cameraPosition.y * cos(4 * DEGREES_TO_RADIANS);
     }
 
-    // In the correct version, we'd gather the OFD_Triangle3D's from all of the environment.
-    // In this temperary version, we'll just draw a triangle or two.
-
 
     BeginDrawing();
     ClearBackground((Color){64, 64, 64, 255});
 
 
     BeginMode3D(camera);
+}
 
-    DrawTriangle3D(
-        (Vector3){0.0f, 0.0f, 0.0f},
-        (Vector3){2.0f, 3.0f, 1.0f},
-        (Vector3){1.0f, 2.0f, -2.0f},
-        BLUE
-    );
-
+void end_frame() {
     EndMode3D();
-
     EndDrawing();
-
 }
 
 
-void initializeRenderer() {
+void initialize_renderer() {
+
+    SetTraceLogLevel(LOG_ERROR); // Remove unnecessary logging from Raylib.
+
     InitWindow(800, 800, "Test Simulation of Open4D");
     SetTargetFPS(30);
 

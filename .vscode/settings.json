@@ -30,6 +30,9 @@
         "tuple": "c",
         "unordered_map": "c",
         "variant": "c",
-        "vector": "c"
+        "vector": "c",
+        "math.h": "c",
+        "ofd_util.h": "c",
+        "bitset": "c"
     }
 }

@@ -33,31 +33,30 @@ struct OFD_RegularMesh OFD_regular_mesh[] = {
 };
 
 
-OFD_Triangle3D *OFD_SliceMesh(OFD_Mesh mesh, double w) { 
-   OFD_Triangle3D *out = NULL;
-   int count = 0;
+OFD_Mesh3D OFD_SliceMesh(OFD_Mesh mesh, double w) { 
+   OFD_Mesh3D out = {0, NULL};
 
    // Iterate through all tetrahedrons and add their slice to a mesh.
    for (int i = 0; i < mesh.length; i++) { 
-      OFD_Triangle3D *slice = OFD_SliceTetrahedron(mesh.mesh[i], w);
-      if (!slice) { continue; }
-
-      int length = sizeof(*slice) / sizeof(slice[0]);
+      OFD_Mesh3D slice = OFD_SliceTetrahedron(mesh.mesh[i], w);
+      if (slice.length == 0 || !slice.mesh) { continue; }
 
       // Extend 'out' to account for new OFD_Triangle3D's.
-      out = realloc(out, (count + length) * sizeof(OFD_Triangle3D));
+      out.mesh = realloc(out.mesh, (out.length + slice.length) * sizeof(OFD_Triangle3D));
 
-      if (!out) { 
-         free(slice);
-         return NULL;
+      if (!out.mesh) { 
+         printf("Failed to allocate memory for slice. Cancelling.");
+         free(slice.mesh);
+         return (OFD_Mesh3D){0, NULL};
       }
 
-      out[count] = slice[0];
-      if (length == 2) {
-         out[count + 1] = slice[1];
+      out.mesh[out.length] = slice.mesh[0];
+      
+      if (slice.length == 2) {
+         out.mesh[out.length + 1] = slice.mesh[1];
       }
-      count += length;
-      free(slice);
+      out.length += slice.length;
+      free(slice.mesh);
    }
    return out;
 }
