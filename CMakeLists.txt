@@ -1,5 +1,3 @@
-
-
 cmake_minimum_required(VERSION 3.10)
 project(Open4D)
 
@@ -10,18 +8,14 @@ set(CMAKE_C_STANDARD 99)
 add_library(Open4D SHARED 
     ${PROJECT_SOURCE_DIR}/src/geometry/mesh.c
     ${PROJECT_SOURCE_DIR}/src/geometry/primitives.c
-    ${PROJECT_SOURCE_DIR}/src/physics/collision.c
-    ${PROJECT_SOURCE_DIR}/src/physics/rigidbody.c
+    ${PROJECT_SOURCE_DIR}/src/physics/rigidbody_detect_collision.c
+    ${PROJECT_SOURCE_DIR}/src/physics/rigidbody_update.c
     ${PROJECT_SOURCE_DIR}/src/sys/gpu_optimization.c
 )
 
-set_target_properties(Open4D PROPERTIES
-    OUTPUT_NAME "Open4D"
-)
+set_target_properties(Open4D PROPERTIES OUTPUT_NAME "Open4D")
 
 target_include_directories(Open4D PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
-
 
 # Testing
 option(TEST "Build unit tests" OFF)
@@ -37,10 +31,7 @@ if(TEST)
     add_executable(test_geometry tests/test_geometry.c)
     target_link_libraries(test_geometry Open4D)
     add_test(NAME TestGeometry COMMAND test_geometry)
-
 endif()
-
-
 
 target_compile_definitions(Open4D PRIVATE OPEN4D_EXPORTS)
 

@@ -19,17 +19,7 @@
    3. This notice may not be removed or altered from any source distribution.
 */
 
-#ifndef OPEN4D
-#define OPEN4D
-
-#include <Open4D/OFD_geometry.h>
-#include <Open4D/OFD_gpu.h>
-#include <Open4D/OFD_math.h>
-#include <Open4D/OFD_physics.h>
-
-#ifdef TESTING 
-#include <Open4D/OFD_test.h>
-#endif
-
-#endif // OPEN4D
-
+/** @brief Initialize Open4D with flags. */
+int OFD_Init(int flags) {
+    return 0;
+}

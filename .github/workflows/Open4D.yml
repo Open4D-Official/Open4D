@@ -1,0 +1,46 @@
+name: blang
+
+on: [push, pull_request]
+
+jobs:
+  macos-build:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build
+      run: cmake . && make
+
+    - name: Save build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: macos-out
+        path: ./blang
+
+  windows-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: cmake --build .
+
+      - name: Save build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-out
+          path: ./blang.exe
+
+  linux-build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build
+      run: cmake . && make
+
+    - name: Save build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: linux-out
+        path: ./blang
